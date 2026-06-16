@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Amakha Paris 360</title>
+    <style>
+        :root {
+            --primary-text: #1d1d1f;
+            --secondary-text: #86868b;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--primary-text);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .bg-shape {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+        }
+        .shape1 { width: 300px; height: 300px; background: rgba(255, 182, 193, 0.4); top: -50px; left: -50px; }
+        .shape2 { width: 250px; height: 250px; background: rgba(173, 216, 230, 0.4); bottom: 100px; right: -50px; }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        header p { font-size: 13px; color: var(--secondary-text); margin-top: 4px; }
+
+        .catalog-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+
+        .product-card:active { transform: scale(0.96); }
+
+        .product-image-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-price { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--primary-text); }
+
+        .stock-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; text-align: center; margin-top: auto; }
+        .stock-high { background: rgba(52, 199, 89, 0.15); color: #248a3d; }
+        .stock-low { background: rgba(255, 149, 0, 0.15); color: #b36b00; }
+        .stock-out { background: rgba(255, 59, 48, 0.15); color: #c91c12; opacity: 0.6; }
+        .out-of-stock-card { opacity: 0.7; filter: grayscale(0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
+
+    <header>
+        <h1>Amakha Paris 360</h1>
+        <p>Catálogo de Fragancias Disponibles</p>
+    </header>
+
+    <main class="catalog-container" id="catalog">
+        <p style="text-align:center; width:100%;">Cargando catálogo...</p>
+    </main>
+
+    <!-- SDK de Firebase Realtime Database v10 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // Tus credenciales reales de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDtT22MM01MGoNosSBNHEdvKQlGu8ghIBQ",
+            authDomain: "inventario-de-local.firebaseapp.com",
+            databaseURL: "https://inventario-de-local-default-rtdb.firebaseio.com",
+            projectId: "inventario-de-local",
+            storageBucket: "inventario-de-local.firebasestorage.app",
+            messagingSenderId: "535105215340",
+            appId: "1:535105215340:web:47fcd308f64297b1c23149"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const perfumesRef = ref(db, "perfumes");
+
+        // Escuchar la base de datos en tiempo real
+        onValue(perfumesRef, (snapshot) => {
+            const catalogContainer = document.getElementById('catalog');
+            catalogContainer.innerHTML = ''; 
+
+            if (!snapshot.exists()) {
+                catalogContainer.innerHTML = '<p style="text-align:center; width:100%;">No hay perfumes disponibles en este momento.</p>';
+                return;
+            }
+
+            const data = snapshot.val();
+
+            Object.keys(data).forEach((id) => {
+                const perfume = data[id];
+                
+                let stockClass = '';
+                let stockText = '';
+                let cardClass = 'product-card';
+
+                if (perfume.stock > 4) {
+                    stockClass = 'stock-high';
+                    stockText = `Stock: ${perfume.stock} disp.`;
+                } else if (perfume.stock > 0 && perfume.stock <= 4) {
+                    stockClass = 'stock-low';
+                    stockText = `¡Solo ${perfume.stock} disp.!`;
+                } else {
+                    stockClass = 'stock-out';
+                    stockText = 'Agotado';
+                    cardClass += ' out-of-stock-card';
+                }
+
+                const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : '';
+
+                catalogContainer.innerHTML += `
+                    <div class="${cardClass}">
+                        <div class="product-image-container">
+                            <img src="${imagenSrc}" alt="${perfume.nombre}" loading="lazy">
+                        </div>
+                        <h2 class="product-name">${perfume.nombre}</h2>
+                        <div class="product-price">$${perfume.precio}</div>
+                        <div class="stock-badge ${stockClass}">
+                            ${stockText}
+                        </div>
+                    </div>
+                `;
+            });
+        }, (error) => {
+            document.getElementById('catalog').innerHTML = `<p style="text-align:center; width:100%; color:red;">Error al cargar catálogo: ${error.message}</p>`;
+        });
+    </script>
+</body>
+</html>
