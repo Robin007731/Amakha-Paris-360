@@ -28,7 +28,7 @@
 
         .catalog-container { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; max-width: 800px; margin: 0 auto; }
         
-        /* Casillas de productos con relieve individual */
+        /* Casillas de productos individuales y resaltadas */
         .product-card { background: var(--card-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 22px; padding: 14px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
         .product-card:hover { transform: translateY(-3px); border-color: rgba(214, 175, 55, 0.3); box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6); }
         
@@ -47,7 +47,7 @@
         .btn-add-cart { background: var(--accent-gold); color: #000000; border: none; padding: 11px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: auto; transition: background 0.2s, transform 0.1s; text-transform: uppercase; letter-spacing: 0.2px; width: 100%; }
         .btn-add-cart:disabled { background: #3a3a3c; color: #8e8e93; cursor: not-allowed; transform: none; }
 
-        /* Botón Flotante */
+        /* Botón Flotante del Carrito */
         .cart-floating-btn { position: fixed; bottom: 24px; right: 24px; background: #ffffff; color: #1c1c1e; padding: 16px 22px; border-radius: 30px; font-weight: 700; box-shadow: 0 12px 35px rgba(0,0,0,0.6); z-index: 100; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
         .cart-badge { background: #1c1c1e; color: #ffffff; font-size: 12px; padding: 3px 9px; border-radius: 12px; font-weight: 700; }
 
@@ -67,7 +67,7 @@
         .cart-item-actions { display: flex; align-items: center; gap: 12px; }
         .cart-item-actions button { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); width: 30px; height: 30px; border-radius: 50%; font-weight: 600; color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Opciones de Envío en Carrito */
+        /* Opciones de Entrega y Envío */
         .delivery-section { padding: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 15px; }
         .delivery-title { font-size: 14px; font-weight: 600; color: var(--secondary-text); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
         .delivery-options { display: flex; flex-direction: column; gap: 10px; }
@@ -80,7 +80,7 @@
         .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 15px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
         .btn-checkout:disabled { background: #3a3a3c; color: #8e8e93; box-shadow: none; cursor: not-allowed; }
 
-        /* Modal Central de Detalles del Producto */
+        /* Modal de Detalles del Producto */
         .detail-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 500px; max-height: 85vh; background: var(--modal-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 28px; z-index: 250; opacity: 0; pointer-events: none; transition: transform 0.3s ease, opacity 0.3s ease; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .detail-modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
         .detail-header { padding: 16px 20px; display: flex; justify-content: flex-end; position: absolute; width: 100%; top: 0; left: 0; z-index: 10; }
@@ -95,7 +95,7 @@
         .detail-description-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--secondary-text); margin-bottom: 6px; letter-spacing: 0.5px; }
         .detail-description-text { font-size: 14px; line-height: 1.5; color: #e5e5ea; margin-bottom: 24px; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Carrusel de Sugerencias */
+        /* Sugerencias Dinámicas Inteligentes */
         .suggestions-section { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-bottom: 10px; }
         .suggestions-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 12px; letter-spacing: 0.5px; }
         .suggestions-wrapper { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
@@ -139,10 +139,10 @@
     <!-- Modal Central de Detalles -->
     <div class="detail-modal" id="detail-modal">
         <div class="detail-header">
-            <button class="close-btn" id="detail-close">X</button>
+            <button class="close-btn" id="detail-close">✕</button>
         </div>
         <div class="detail-body" id="detail-body-content">
-            <!-- Render dinámico de detalles -->
+            <!-- Contenido dinámico de detalles -->
         </div>
     </div>
 
@@ -150,7 +150,7 @@
     <div class="cart-modal" id="cart-modal">
         <div class="cart-header">
             <h2>Tu Pedido</h2>
-            <button class="close-btn" id="cart-close">X</button>
+            <button class="close-btn" id="cart-close">✕</button>
         </div>
         <div class="cart-items-container">
             <div id="cart-items">
@@ -158,7 +158,7 @@
             </div>
         </div>
         <div class="cart-footer">
-            <!-- Selección de entrega -->
+            <!-- Selección de entrega integrada -->
             <div class="delivery-section">
                 <div class="delivery-title">Método de entrega</div>
                 <div class="delivery-options">
@@ -187,6 +187,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+        // Configuración de tu base de datos de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDtT22MM01MGoNosSBNHEdvKQlGu8ghIBQ",
             authDomain: "inventario-de-local.firebaseapp.com",
@@ -197,7 +198,8 @@
             appId: "1:535105215340:web:47fcd308f64297b1c23149"
         };
 
-        const WHATSAPP_NUMERO = "59890000000"; 
+        // Tu número de WhatsApp configurado con el formato API correcto para Uruguay
+        const WHATSAPP_NUMERO = "59898324329"; 
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
@@ -218,7 +220,6 @@
         const btnPay = document.getElementById('btn-pay');
         const detailBodyContent = document.getElementById('detail-body-content');
 
-        // Control de Modales
         const openCart = () => {
             cartModal.classList.add('open');
             globalOverlay.classList.add('open');
@@ -236,7 +237,7 @@
         detailClose.addEventListener('click', closeAllModales);
         globalOverlay.addEventListener('click', closeAllModales);
 
-        // Actualización en tiempo real
+        // Carga y renderizado del catálogo en tiempo real
         onValue(perfumesRef, (snapshot) => {
             const catalogContainer = document.getElementById('catalog');
             catalogContainer.innerHTML = ''; 
@@ -296,13 +297,12 @@
 
             validateCartStock();
             
-            // Si el modal de detalles está abierto, refrescarlo con la info actualizada en tiempo real
             if (detailModal.classList.contains('open') && window.amp_currentDetailId) {
                 window.amp_openDetail(window.amp_currentDetailId, true);
             }
         });
 
-        // Ver Detalles y Generar Sugerencias Automáticas
+        // Apertura del modal central de detalles con carrusel de sugerencias en stock
         window.amp_currentDetailId = null;
         window.amp_openDetail = function(id, isRefresh = false) {
             window.amp_currentDetailId = id;
@@ -317,7 +317,7 @@
             else if (perfume.stock > 0) { stockClass = 'stock-low'; stockText = `Solo ${perfume.stock} disponibles`; }
             else { stockClass = 'stock-out'; stockText = 'Agotado'; }
 
-            // Filtrar sugerencias (Otros perfumes que tengan stock)
+            // Algoritmo de sugerencias: Filtra fragancias que no sean la actual y cuenten con stock
             const sugerenciasIds = Object.keys(dbInventory).filter(item => item !== id && dbInventory[item].stock > 0);
             let sugerenciasHtml = '';
             
@@ -455,6 +455,7 @@
             cartBadgeCount.innerText = totalItemsCount;
         }
 
+        // Envío de la información de compra con reducción segura del inventario
         btnPay.addEventListener('click', async () => {
             if (Object.keys(cart).length === 0) return;
 
@@ -462,7 +463,6 @@
             btnPay.innerText = "Procesando pedido...";
 
             try {
-                // Obtener el tipo de envío seleccionado
                 const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
                 const entregaTexto = deliveryOption === 'envio' ? "Envío a domicilio" : "Retirar gratis en dirección del vendedor";
 
