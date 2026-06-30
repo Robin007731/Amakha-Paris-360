@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Fragancias 360</title>
+    <title>Fragancias 360 - Catálogo & Reservas</title>
     <style>
         :root {
             --primary-text: #ffffff;
@@ -15,7 +15,6 @@
             --modal-bg: rgba(20, 20, 22, 0.95);
         }
 
-        /* Reseteo global optimizado para evitar comportamientos nativos extraños en móviles */
         * { 
             box-sizing: border-box; 
             margin: 0; 
@@ -34,13 +33,6 @@
             overflow-x: hidden;
             text-rendering: optimizeLegibility;
             -webkit-font-smoothing: antialiased;
-        }
-        
-        /* Ajuste de botones para forzar diseño premium en iOS */
-        button {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
         }
         
         .bg-shape { position: fixed; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.6; pointer-events: none; }
@@ -63,7 +55,6 @@
 
         .catalog-container { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; max-width: 800px; margin: 0 auto; }
         
-        /* Casillas de productos con relieve individual */
         .product-card { background: var(--card-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 22px; padding: 14px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
         .product-card:hover { transform: translateY(-3px); border-color: rgba(214, 175, 55, 0.3); box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6); }
         
@@ -75,18 +66,15 @@
 
         .stock-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-align: center; margin-bottom: 12px; width: max-content; }
         .stock-high { background: rgba(48, 209, 88, 0.15); color: #30d158; }
-        .stock-low { background: rgba(255, 159, 10, 0.15); color: #ff9f0a; }
-        .stock-out { background: rgba(255, 69, 58, 0.15); color: #ff453a; opacity: 0.6; }
-        .out-of-stock-card { opacity: 0.4; filter: grayscale(0.6); }
+        .stock-out { background: rgba(255, 69, 58, 0.15); color: #ff453a; }
+        .out-of-stock-card { border-color: rgba(138, 43, 226, 0.25); }
 
         .btn-add-cart { background: var(--accent-gold); color: #000000; border: none; padding: 11px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: auto; transition: background 0.2s, transform 0.1s; text-transform: uppercase; letter-spacing: 0.2px; width: 100%; }
-        .btn-add-cart:disabled { background: #3a3a3c; color: #8e8e93; cursor: not-allowed; transform: none; }
+        .btn-reserve { background: #8a2be2; color: #ffffff; }
 
-        /* Botón Flotante con soporte de Safe Area */
         .cart-floating-btn { position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); right: 24px; background: #ffffff; color: #1c1c1e; padding: 16px 22px; border-radius: 30px; font-weight: 700; box-shadow: 0 12px 35px rgba(0,0,0,0.6); z-index: 100; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
         .cart-badge { background: #1c1c1e; color: #ffffff; font-size: 12px; padding: 3px 9px; border-radius: 12px; font-weight: 700; }
 
-        /* Drawer Lateral del Carrito */
         .cart-modal { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; background: var(--modal-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); box-shadow: -15px 0 40px rgba(0,0,0,0.5); z-index: 200; transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; border-left: 1px solid rgba(255, 255, 255, 0.08); }
         .cart-modal.open { right: 0; }
         
@@ -97,12 +85,11 @@
         .cart-items-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .cart-item-info h4 { font-size: 15px; font-weight: 600; }
-        .cart-item-info p { font-size: 13px; color: var(--secondary-text); }
+        .badge-reserve-inline { background: #8a2be2; color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; margin-left: 5px; font-weight: bold; }
         
         .cart-item-actions { display: flex; align-items: center; gap: 12px; }
         .cart-item-actions button { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); width: 30px; height: 30px; border-radius: 50%; font-weight: 600; color: #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Opciones de Entrega y Envío */
         .delivery-section { padding: 0 0 15px 0; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 15px; }
         .delivery-title { font-size: 14px; font-weight: 600; color: var(--secondary-text); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
         .delivery-options { display: flex; flex-direction: column; gap: 10px; }
@@ -115,7 +102,6 @@
         .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 15px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); }
         .btn-checkout:disabled { background: #3a3a3c; color: #8e8e93; box-shadow: none; cursor: not-allowed; }
 
-        /* Modal de Detalles del Producto */
         .detail-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 92%; max-width: 500px; max-height: 85vh; background: var(--modal-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 28px; z-index: 250; opacity: 0; pointer-events: none; transition: transform 0.3s ease, opacity 0.3s ease; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
         .detail-modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
         .detail-header { padding: 16px 20px; display: flex; justify-content: flex-end; position: absolute; width: 100%; top: 0; left: 0; z-index: 10; }
@@ -130,19 +116,6 @@
         .detail-description-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--secondary-text); margin-bottom: 6px; letter-spacing: 0.5px; }
         .detail-description-text { font-size: 14px; line-height: 1.5; color: #e5e5ea; margin-bottom: 24px; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Sugerencias Dinámicas Inteligentes */
-        .suggestions-section { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-bottom: 10px; }
-        .suggestions-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 12px; letter-spacing: 0.5px; }
-        .suggestions-wrapper { display: flex; gap: 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px; scrollbar-width: none; }
-        .suggestions-wrapper::-webkit-scrollbar { display: none; }
-        
-        .suggestion-card { flex: 0 0 110px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 8px; border-radius: 14px; cursor: pointer; text-align: center; transition: border-color 0.2s; }
-        .suggestion-card:hover { border-color: rgba(214, 175, 55, 0.4); }
-        .suggestion-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; margin-bottom: 6px; background: rgba(0,0,0,0.2); }
-        .suggestion-card h5 { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ffffff; }
-        .suggestion-card p { font-size: 11px; color: var(--secondary-text); font-weight: 700; margin-top: 2px; }
-
-        /* Capas de fondo oscuras con blur unificado */
         .global-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 150; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
         .global-overlay.open { display: block; }
         .global-overlay.detail-z { z-index: 240; }
@@ -155,45 +128,36 @@
 
     <header>
         <h1>Fragancias 360</h1>
-        <p>Catálogo de Perfumes y productos disponibles</p>
+        <p>Catálogo de Perfumes e Inventario con Reservas</p>
     </header>
 
     <main class="catalog-container" id="catalog">
         <p style="text-align:center; width:100%; color: var(--secondary-text);">Cargando catálogo...</p>
     </main>
 
-    <!-- Botón Flotante del Carrito -->
     <div class="cart-floating-btn" id="cart-btn">
         <span>Mi Pedido</span>
         <span class="cart-badge" id="cart-badge-count">0</span>
     </div>
 
-    <!-- Capa desenfocada global -->
     <div class="global-overlay" id="global-overlay"></div>
 
-    <!-- Modal Central de Detalles -->
     <div class="detail-modal" id="detail-modal">
         <div class="detail-header">
             <button class="close-btn" id="detail-close">✕</button>
         </div>
-        <div class="detail-body" id="detail-body-content">
-            <!-- Contenido dinámico de detalles -->
-        </div>
+        <div class="detail-body" id="detail-body-content"></div>
     </div>
 
-    <!-- Drawer Lateral del Carrito -->
     <div class="cart-modal" id="cart-modal">
         <div class="cart-header">
             <h2>Tu Pedido</h2>
             <button class="close-btn" id="cart-close">✕</button>
         </div>
         <div class="cart-items-container">
-            <div id="cart-items">
-                <!-- Items dinámicos -->
-            </div>
+            <div id="cart-items"></div>
         </div>
         <div class="cart-footer">
-            <!-- Selección de entrega integrada -->
             <div class="delivery-section">
                 <div class="delivery-title">Método de entrega</div>
                 <div class="delivery-options">
@@ -220,7 +184,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+        import { getDatabase, ref, onValue, runTransaction, push, set } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDtT22MM01MGoNosSBNHEdvKQlGu8ghIBQ",
@@ -285,19 +249,25 @@
             
             Object.keys(dbInventory).forEach((id) => {
                 const perfume = dbInventory[id];
-                let stockClass = '', stockText = '', cardClass = 'product-card', isBtnDisabled = false;
+                let stockHtml = '';
+                let buttonText = 'Agregar';
+                let buttonClass = 'btn-add-cart';
+                let cardClass = 'product-card';
 
-                if (perfume.stock > 4) {
-                    stockClass = 'stock-high';
-                    stockText = `Stock: ${perfume.stock} disp.`;
-                } else if (perfume.stock > 0 && perfume.stock <= 4) {
-                    stockClass = 'stock-low';
-                    stockText = `Solo ${perfume.stock} disponibles`;
+                if (perfume.stock > 0) {
+                    stockHtml = `<div class="stock-badge stock-high">Stock: ${perfume.stock} disp.</div>`;
+                    buttonText = 'Agregar';
+                    buttonClass = 'btn-add-cart';
                 } else {
-                    stockClass = 'stock-out';
-                    stockText = 'Agotado';
+                    stockHtml = `
+                        <div style="margin-bottom: 12px;">
+                            <div class="stock-badge stock-out" style="margin-bottom: 4px;">Agotado</div>
+                            <p style="font-size: 12px; color: #b163ff; font-weight: 600; font-style: italic;">¿Deseas reservar el tuyo?</p>
+                        </div>
+                    `;
+                    buttonText = 'Reservar';
+                    buttonClass = 'btn-add-cart btn-reserve';
                     cardClass += ' out-of-stock-card';
-                    isBtnDisabled = true;
                 }
 
                 const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
@@ -311,10 +281,10 @@
                     <div onclick="window.amp_openDetail('${id}')">
                         <h2 class="product-name">${perfume.nombre}</h2>
                         <div class="product-price">$${perfume.precio}</div>
-                        <div class="stock-badge ${stockClass}">${stockText}</div>
+                        ${stockHtml}
                     </div>
-                    <button class="btn-add-cart" ${isBtnDisabled ? 'disabled' : ''} data-id="${id}">
-                        ${isBtnDisabled ? 'Agotado' : 'Agregar'}
+                    <button class="${buttonClass}" data-id="${id}">
+                        ${buttonText}
                     </button>
                 `;
                 catalogContainer.appendChild(card);
@@ -343,25 +313,20 @@
             const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
             const descripcionText = perfume.descripcion ? perfume.descripcion : 'Fragancia de alta calidad perteneciente a la línea premium internacional.';
             
-            let stockClass = '', stockText = '', isBtnDisabled = perfume.stock <= 0;
-            if (perfume.stock > 4) { stockClass = 'stock-high'; stockText = `Stock: ${perfume.stock} disp.`; }
-            else if (perfume.stock > 0) { stockClass = 'stock-low'; stockText = `Solo ${perfume.stock} disponibles`; }
-            else { stockClass = 'stock-out'; stockText = 'Agotado'; }
-
-            const sugerenciasIds = Object.keys(dbInventory).filter(item => item !== id && dbInventory[item].stock > 0);
-            let sugerenciasHtml = '';
-            
-            sugerenciasIds.slice(0, 4).forEach(sugId => {
-                const sugPerfume = dbInventory[sugId];
-                const sugImg = sugPerfume.fotoUrl ? sugPerfume.fotoUrl : 'https://via.placeholder.com/150?text=Sin+Foto';
-                sugerenciasHtml += `
-                    <div class="suggestion-card" onclick="window.amp_openDetail('${sugId}')">
-                        <img src="${sugImg}" alt="${sugPerfume.nombre}">
-                        <h5>${sugPerfume.nombre}</h5>
-                        <p>$${sugPerfume.precio}</p>
+            let stockHtml = '', buttonText = 'Agregar al pedido', buttonClass = 'btn-add-cart';
+            if (perfume.stock > 0) { 
+                stockHtml = `<div class="stock-badge stock-high">Stock: ${perfume.stock} disp.</div>`; 
+                buttonText = 'Agregar al pedido'; 
+            } else { 
+                stockHtml = `
+                    <div>
+                        <div class="stock-badge stock-out" style="margin-bottom: 2px;">Agotado</div>
+                        <p style="font-size: 13px; color: #b163ff; font-weight: 600; font-style: italic; margin-bottom: 8px;">¿Deseas reservar el tuyo?</p>
                     </div>
-                `;
-            });
+                `; 
+                buttonText = 'Reservar Producto'; 
+                buttonClass += ' btn-reserve'; 
+            }
 
             detailBodyContent.innerHTML = `
                 <div class="detail-main-info">
@@ -371,21 +336,14 @@
                     <div>
                         <h3 class="detail-title">${perfume.nombre}</h3>
                         <div class="detail-price">$${perfume.precio}</div>
-                        <div class="stock-badge ${stockClass}">${stockText}</div>
+                        ${stockHtml}
                     </div>
                 </div>
                 <div class="detail-description-title">Descripción</div>
                 <div class="detail-description-text">${descripcionText}</div>
                 
-                <div class="suggestions-section">
-                    <div class="suggestions-title">Sugerencias para ti</div>
-                    <div class="suggestions-wrapper">
-                        ${sugerenciasHtml ? sugerenciasHtml : '<p style="font-size:12px; color:var(--secondary-text);">No hay otras sugerencias por el momento.</p>'}
-                    </div>
-                </div>
-                
-                <button class="btn-add-cart" id="modal-add-btn" ${isBtnDisabled ? 'disabled' : ''}>
-                    ${isBtnDisabled ? 'Agotado' : 'Agregar al pedido'}
+                <button class="${buttonClass}" id="modal-add-btn">
+                    ${buttonText}
                 </button>
             `;
 
@@ -402,19 +360,32 @@
             const maxAvailable = dbInventory[id]?.stock || 0;
             const currentInCart = cart[id]?.quantity || 0;
 
-            if (currentInCart < maxAvailable) {
+            if (maxAvailable === 0) {
                 if (!cart[id]) {
                     cart[id] = {
                         nombre: dbInventory[id].nombre,
                         precio: dbInventory[id].precio,
-                        quantity: 1
+                        quantity: 1,
+                        esReserva: true
+                    };
+                } else {
+                    cart[id].quantity += 1;
+                }
+                renderCart();
+            } else if (currentInCart < maxAvailable) {
+                if (!cart[id]) {
+                    cart[id] = {
+                        nombre: dbInventory[id].nombre,
+                        precio: dbInventory[id].precio,
+                        quantity: 1,
+                        esReserva: false
                     };
                 } else {
                     cart[id].quantity += 1;
                 }
                 renderCart();
             } else {
-                alert("Cantidad máxima en stock alcanzado.");
+                alert("Has alcanzado el límite de stock disponible para envío inmediato. Puedes reservar si se agota.");
             }
         }
 
@@ -425,10 +396,12 @@
 
             if (newQuantity <= 0) {
                 delete cart[id];
+            } else if (cart[id].esReserva) {
+                cart[id].quantity = newQuantity;
             } else if (newQuantity <= maxAvailable) {
                 cart[id].quantity = newQuantity;
             } else {
-                alert("Cantidad máxima en stock alcanzado.");
+                alert("Cantidad máxima de stock inmediato alcanzada.");
             }
             renderCart();
         };
@@ -437,11 +410,11 @@
             let changesMade = false;
             Object.keys(cart).forEach(id => {
                 const currentStock = dbInventory[id]?.stock || 0;
-                if (currentStock === 0) {
-                    delete cart[id];
+                if (currentStock === 0 && !cart[id].esReserva) {
+                    cart[id].esReserva = true;
                     changesMade = true;
-                } else if (cart[id].quantity > currentStock) {
-                    cart[id].quantity = currentStock;
+                } else if (currentStock > 0 && cart[id].esReserva) {
+                    cart[id].esReserva = false;
                     changesMade = true;
                 }
             });
@@ -462,7 +435,7 @@
                 row.className = 'cart-item';
                 row.innerHTML = `
                     <div class="cart-item-info">
-                        <h4>${item.nombre}</h4>
+                        <h4>${item.nombre} ${item.esReserva ? '<span class="badge-reserve-inline">Reserva</span>' : ''}</h4>
                         <p>$${item.precio} c/u • Subtotal: $${subtotal}</p>
                     </div>
                     <div class="cart-item-actions">
@@ -488,33 +461,75 @@
         btnPay.addEventListener('click', async () => {
             if (Object.keys(cart).length === 0) return;
 
+            // --- PASO NUEVO: SOLICITAR NOMBRE COMPLETO ---
+            const nombreCliente = prompt("Por favor, ingresa tu Nombre Completo para registrar la compra/reserva:");
+            if (nombreCliente === null) return; // Si presiona cancelar, detenemos el proceso
+            
+            const nombreLimpio = nombreCliente.trim();
+            if (nombreLimpio === "") {
+                alert("El nombre es obligatorio para completar el pedido.");
+                return;
+            }
+
+            // Solicitar número de contacto opcional o complementario
+            const telefonoCliente = prompt("Ingresa un número de teléfono / celular de contacto:");
+            const telefonoLimpio = telefonoCliente ? telefonoCliente.trim() : "No especificado";
+
             btnPay.disabled = true;
-            btnPay.innerText = "Procesando pedido...";
+            btnPay.innerText = "Procesando...";
 
             try {
                 const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
                 const entregaTexto = deliveryOption === 'envio' ? "Envío a domicilio" : "Retirar gratis en dirección del vendedor";
 
-                let mensajeWhatsApp = "Hola! Vengo de tu catálogo y quiero confirmar este pedido:\n\n";
+                // Iniciamos el mensaje con el Nombre del Cliente
+                let mensajeWhatsApp = `¡Hola! Mi nombre es *${nombreLimpio}*.\nVengo de tu catálogo y quiero confirmar este pedido:\n\n`;
                 let totalPedido = 0;
+                let contieneReservas = false;
 
                 for (const id of Object.keys(cart)) {
                     const itemComprado = cart[id];
-                    const stockProductRef = ref(db, `perfumes/${id}/stock`);
-
-                    await runTransaction(stockProductRef, (currentStock) => {
-                        if (currentStock === null) return 0;
-                        return Math.max(0, currentStock - itemComprado.quantity);
-                    });
-
                     const subtotal = itemComprado.precio * itemComprado.quantity;
                     totalPedido += subtotal;
-                    mensajeWhatsApp += `- ${itemComprado.nombre} \n  Cantidad: ${itemComprado.quantity} u. x $${itemComprado.precio}\n  Subtotal: $${subtotal}\n\n`;
+
+                    if (itemComprado.esReserva) {
+                        contieneReservas = true;
+                        mensajeWhatsApp += `- [RESERVA] ${itemComprado.nombre} \n  Cantidad: ${itemComprado.quantity} u. x $${itemComprado.precio}\n  Subtotal: $${subtotal}\n\n`;
+                        
+                        // Guardar la información en el nodo "reservas" de Firebase de forma independiente
+                        // para que el admin pueda visualizar quién reservó y qué perfume.
+                        const reservasRef = ref(db, "reservas");
+                        const nuevaReservaRef = push(reservasRef);
+                        await set(nuevaReservaRef, {
+                            cliente: nombreLimpio,
+                            telefono: telefonoLimpio,
+                            perfumeId: id,
+                            perfumeNombre: itemComprado.nombre,
+                            cantidad: itemComprado.quantity,
+                            precioUnitario: itemComprado.precio,
+                            total: subtotal,
+                            fecha: new Date().toISOString(),
+                            metodoEntrega: entregaTexto,
+                            estado: "Pendiente"
+                        });
+                    } else {
+                        const stockProductRef = ref(db, `perfumes/${id}/stock`);
+                        await runTransaction(stockProductRef, (currentStock) => {
+                            if (currentStock === null) return 0;
+                            return Math.max(0, currentStock - itemComprado.quantity);
+                        });
+                        mensajeWhatsApp += `- ${itemComprado.nombre} \n  Cantidad: ${itemComprado.quantity} u. x $${itemComprado.precio}\n  Subtotal: $${subtotal}\n\n`;
+                    }
                 }
 
                 mensajeWhatsApp += `TOTAL A PAGAR: $${totalPedido}\n`;
-                mensajeWhatsApp += `Método de entrega preferido: ${entregaTexto}\n\n`;
-                mensajeWhatsApp += "Quedo atento para coordinar el método de pago y los detalles finales.";
+                mensajeWhatsApp += `Método de entrega preferido: ${entregaTexto}\n`;
+                mensajeWhatsApp += `Contacto provisto: ${telefonoLimpio}\n\n`;
+                
+                if (contieneReservas) {
+                    mensajeWhatsApp += "⚠️ NOTA: Mi pedido contiene artículos bajo reserva previa.\n\n";
+                }
+                mensajeWhatsApp += "Quedo atento para coordinar los detalles.";
 
                 cart = {};
                 renderCart();
@@ -524,7 +539,7 @@
                 window.open(urlWhatsApp, '_blank');
 
             } catch (error) {
-                alert("Hubo un percance procesando el stock. Reintenta de nuevo por favor.");
+                alert("Hubo un percance procesando el pedido.");
                 console.error(error);
             } finally {
                 btnPay.disabled = false;
