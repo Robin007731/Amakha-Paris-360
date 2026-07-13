@@ -222,7 +222,12 @@
         const perfumesRef = ref(db, "perfumes");
 
         let dbInventory = {}; 
-        let cart = {};        
+        let cart = {};
+        
+        // Logs de depuración
+        console.log("✅ Firebase inicializado");
+        console.log("🔗 Database URL:", firebaseConfig.databaseURL);
+        console.log("📍 Escuchando en:", perfumesRef.path);        
 
         const cartBtn = document.getElementById('cart-btn');
         const cartModal = document.getElementById('cart-modal');
@@ -328,17 +333,20 @@
         globalOverlay.addEventListener('click', closeAllModales);
 
         onValue(perfumesRef, (snapshot) => {
+            console.log("📦 Datos recibidos de Firebase", snapshot.val());
             const catalogContainer = document.getElementById('catalog');
             catalogContainer.innerHTML = ''; 
 
             if (!snapshot.exists()) {
-                catalogContainer.innerHTML = '<p style="text-align:center; width:100%; color: var(--secondary-text);">No hay perfumes disponibles actualmente.</p>';
+                console.warn("⚠️ No hay datos en 'perfumes'");
+                catalogContainer.innerHTML = '<p style="text-align:center; width:100%; color: var(--secondary-text);">No hay perfumes disponibles actualmente. Verifica que los datos estén en Firebase.</p>';
                 dbInventory = {};
                 validateCartStock();
                 return;
             }
 
             dbInventory = snapshot.val();
+            console.log("✅ Perfumes cargados:", Object.keys(dbInventory).length);
             
             Object.keys(dbInventory).forEach((id) => {
                 const perfume = dbInventory[id];
@@ -395,6 +403,10 @@
             if (detailModal.classList.contains('open') && window.amp_currentDetailId) {
                 window.amp_openDetail(window.amp_currentDetailId, true);
             }
+        }, (error) => {
+            console.error("❌ Error al conectar con Firebase:", error);
+            const catalogContainer = document.getElementById('catalog');
+            catalogContainer.innerHTML = `<p style="text-align:center; width:100%; color: #ff453a;">⚠️ Error de conexión: ${error.message}</p>`;
         });
 
         window.amp_currentDetailId = null;
