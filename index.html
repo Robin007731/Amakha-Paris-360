@@ -657,7 +657,7 @@
                 closeAllModales();
 
                 // Mostrar mensaje de éxito
-                await showAlert(`¡Pedido registrado exitosamente!\n\n👤 ${nombreLimpio}\n💰 Total: $${totalPedido.toLocaleString()}\n📱 ${telefonoLimpio}\n\nEl administrador se pondrá en contacto pronto.", "✅");
+                await showAlert(`¡Pedido registrado exitosamente!\n\n👤 ${nombreLimpio}\n💰 Total: $${totalPedido.toLocaleString()}\n📱 ${telefonoLimpio}\n\nEl administrador se pondrá en contacto pronto.`, "✅");
 
             } catch (error) {
                 await showAlert("Hubo un error registrando el pedido. Por favor, intenta nuevamente.", "❌");
