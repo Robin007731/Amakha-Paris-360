@@ -177,7 +177,7 @@
                 <span id="cart-total-val">$0</span>
             </div>
             <button class="btn-checkout" id="btn-pay" disabled>
-                Hacer pago por WhatsApp
+                <span>✅ Confirmar Pedido</span>
             </button>
         </div>
     </div>
@@ -424,6 +424,7 @@
         function renderCart() {
             cartItemsContainer.innerHTML = '';
             let total = 0, totalItemsCount = 0;
+            let reservasCount = 0, comprasCount = 0;
 
             Object.keys(cart).forEach(id => {
                 const item = cart[id];
@@ -431,16 +432,24 @@
                 total += subtotal;
                 totalItemsCount += item.quantity;
 
+                if (item.esReserva) {
+                    reservasCount++;
+                } else {
+                    comprasCount++;
+                }
+
                 const row = document.createElement('div');
                 row.className = 'cart-item';
+                const badge = item.esReserva ? '<span class="badge-reserve-inline">🔔 RESERVA</span>' : '<span style="background: #30d158; color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; margin-left: 5px; font-weight: bold;">✓ DISPONIBLE</span>';
+                
                 row.innerHTML = `
                     <div class="cart-item-info">
-                        <h4>${item.nombre} ${item.esReserva ? '<span class="badge-reserve-inline">Reserva</span>' : ''}</h4>
-                        <p>$${item.precio} c/u • Subtotal: $${subtotal}</p>
+                        <h4>${item.nombre} ${badge}</h4>
+                        <p style="font-size: 13px;">$${item.precio} c/u • Subtotal: $${subtotal}</p>
                     </div>
                     <div class="cart-item-actions">
-                        <button onclick="window.amp_changeQuantity('${id}', -1)">-</button>
-                        <span>${item.quantity}</span>
+                        <button onclick="window.amp_changeQuantity('${id}', -1)">−</button>
+                        <span style="min-width: 25px; text-align: center;">${item.quantity}</span>
                         <button onclick="window.amp_changeQuantity('${id}', 1)">+</button>
                     </div>
                 `;
@@ -452,18 +461,29 @@
                 btnPay.disabled = true;
             } else {
                 btnPay.disabled = false;
+                
+                // Agregar resumen de estado
+                const summary = document.createElement('div');
+                summary.style.cssText = 'padding: 16px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); margin-top: 8px; font-size: 12px; color: #a1a1a6;';
+                summary.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; gap: 10px;">
+                        <span>📦 ${comprasCount} Disponibles</span>
+                        <span>🔔 ${reservasCount} Reservas</span>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(summary);
             }
 
-            cartTotalVal.innerText = `$${total}`;
+            cartTotalVal.innerText = `$${total.toLocaleString()}`;
             cartBadgeCount.innerText = totalItemsCount;
         }
 
         btnPay.addEventListener('click', async () => {
             if (Object.keys(cart).length === 0) return;
 
-            // --- PASO NUEVO: SOLICITAR NOMBRE COMPLETO ---
-            const nombreCliente = prompt("Por favor, ingresa tu Nombre Completo para registrar la compra/reserva:");
-            if (nombreCliente === null) return; // Si presiona cancelar, detenemos el proceso
+            // --- PASO 1: SOLICITAR NOMBRE COMPLETO ---
+            const nombreCliente = prompt("👤 Por favor, ingresa tu Nombre Completo para registrar la compra/reserva:");
+            if (nombreCliente === null) return;
             
             const nombreLimpio = nombreCliente.trim();
             if (nombreLimpio === "") {
@@ -471,19 +491,19 @@
                 return;
             }
 
-            // Solicitar número de contacto opcional o complementario
-            const telefonoCliente = prompt("Ingresa un número de teléfono / celular de contacto:");
+            // PASO 2: Solicitar número de contacto
+            const telefonoCliente = prompt("📱 Ingresa un número de teléfono / celular de contacto:");
             const telefonoLimpio = telefonoCliente ? telefonoCliente.trim() : "No especificado";
 
             btnPay.disabled = true;
-            btnPay.innerText = "Procesando...";
+            btnPay.innerText = "⏳ Registrando pedido...";
 
             try {
                 const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
                 const entregaTexto = deliveryOption === 'envio' ? "Envío a domicilio" : "Retirar gratis en dirección del vendedor";
 
-                // Iniciamos el mensaje con el Nombre del Cliente
-                let mensajeWhatsApp = `¡Hola! Mi nombre es *${nombreLimpio}*.\nVengo de tu catálogo y quiero confirmar este pedido:\n\n`;
+                // Construir array de items para Firebase
+                let items = [];
                 let totalPedido = 0;
                 let contieneReservas = false;
 
@@ -492,58 +512,54 @@
                     const subtotal = itemComprado.precio * itemComprado.quantity;
                     totalPedido += subtotal;
 
+                    items.push({
+                        id: id,
+                        nombre: itemComprado.nombre,
+                        cantidad: itemComprado.quantity,
+                        precio: itemComprado.precio,
+                        subtotal: subtotal,
+                        esReserva: itemComprado.esReserva
+                    });
+
                     if (itemComprado.esReserva) {
                         contieneReservas = true;
-                        mensajeWhatsApp += `- [RESERVA] ${itemComprado.nombre} \n  Cantidad: ${itemComprado.quantity} u. x $${itemComprado.precio}\n  Subtotal: $${subtotal}\n\n`;
-                        
-                        // Guardar la información en el nodo "reservas" de Firebase de forma independiente
-                        // para que el admin pueda visualizar quién reservó y qué perfume.
-                        const reservasRef = ref(db, "reservas");
-                        const nuevaReservaRef = push(reservasRef);
-                        await set(nuevaReservaRef, {
-                            cliente: nombreLimpio,
-                            telefono: telefonoLimpio,
-                            perfumeId: id,
-                            perfumeNombre: itemComprado.nombre,
-                            cantidad: itemComprado.quantity,
-                            precioUnitario: itemComprado.precio,
-                            total: subtotal,
-                            fecha: new Date().toISOString(),
-                            metodoEntrega: entregaTexto,
-                            estado: "Pendiente"
-                        });
                     } else {
                         const stockProductRef = ref(db, `perfumes/${id}/stock`);
                         await runTransaction(stockProductRef, (currentStock) => {
                             if (currentStock === null) return 0;
                             return Math.max(0, currentStock - itemComprado.quantity);
                         });
-                        mensajeWhatsApp += `- ${itemComprado.nombre} \n  Cantidad: ${itemComprado.quantity} u. x $${itemComprado.precio}\n  Subtotal: $${subtotal}\n\n`;
                     }
                 }
 
-                mensajeWhatsApp += `TOTAL A PAGAR: $${totalPedido}\n`;
-                mensajeWhatsApp += `Método de entrega preferido: ${entregaTexto}\n`;
-                mensajeWhatsApp += `Contacto provisto: ${telefonoLimpio}\n\n`;
-                
-                if (contieneReservas) {
-                    mensajeWhatsApp += "⚠️ NOTA: Mi pedido contiene artículos bajo reserva previa.\n\n";
-                }
-                mensajeWhatsApp += "Quedo atento para coordinar los detalles.";
+                // Guardar la reserva/pedido completo en Firebase con estructura mejorada
+                const reservasRef = ref(db, "reservas");
+                const nuevaReservaRef = push(reservasRef);
+                await set(nuevaReservaRef, {
+                    cliente: nombreLimpio,
+                    telefono: telefonoLimpio,
+                    items: items,
+                    total: totalPedido,
+                    fecha: new Date().toISOString(),
+                    metodoEntrega: entregaTexto,
+                    estado: "Pendiente",
+                    contieneReservas: contieneReservas
+                });
 
+                // Limpiar carrito y cerrar modales
                 cart = {};
                 renderCart();
                 closeAllModales();
 
-                const urlWhatsApp = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensajeWhatsApp)}`;
-                window.open(urlWhatsApp, '_blank');
+                // Mostrar mensaje de éxito
+                alert(`✅ ¡Pedido registrado exitosamente!\n\nNombre: ${nombreLimpio}\nTotal: $${totalPedido.toLocaleString()}\nContacto: ${telefonoLimpio}\n\nEl administrador se pondrá en contacto contigo pronto.`);
 
             } catch (error) {
-                alert("Hubo un percance procesando el pedido.");
+                alert("❌ Hubo un error registrando el pedido. Por favor, intenta nuevamente.");
                 console.error(error);
             } finally {
                 btnPay.disabled = false;
-                btnPay.innerHTML = "Hacer pago por WhatsApp";
+                btnPay.innerHTML = "<span>✅ Confirmar Pedido</span>";
             }
         });
     </script>
