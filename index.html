@@ -8,10 +8,11 @@
         :root {
             --primary-text: #ffffff;
             --secondary-text: #a1a1a6;
-            --accent-gold: #d4af37;
-            --bg-gradient: linear-gradient(135deg, #0f0f11 0%, #1c1c1e 100%);
-            --card-bg: rgba(30, 30, 34, 0.75);
-            --card-border: rgba(255, 255, 255, 0.12);
+            --accent-gold: #fee082;
+            --accent-gold-dark: #d4af37;
+            --bg-gradient: linear-gradient(135deg, #09090b 0%, #121214 100%);
+            --card-bg: rgba(22, 22, 26, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
             --modal-bg: rgba(20, 20, 22, 0.95);
         }
 
@@ -43,7 +44,7 @@
             position: sticky; 
             top: 0; 
             z-index: 90; 
-            background: rgba(15, 15, 17, 0.85); 
+            background: rgba(9, 9, 11, 0.85); 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px); 
             border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
@@ -53,6 +54,59 @@
         header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fee082 0%, #d4af37 50%, #a37c1e 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { font-size: 13px; color: var(--secondary-text); margin-top: 5px; letter-spacing: 0.3px; }
 
+        .filters-container {
+            max-width: 800px;
+            margin: 20px auto 0 auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-bar:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .genre-filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .genre-filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .genre-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--secondary-text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .genre-btn.active {
+            background: var(--accent-gold);
+            color: #000000;
+            border-color: var(--accent-gold);
+        }
+
         .catalog-container { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; max-width: 800px; margin: 0 auto; }
         
         .product-card { background: var(--card-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid var(--card-border); border-radius: 22px; padding: 14px; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
@@ -61,6 +115,7 @@
         .product-image-container { width: 100%; aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.04); border-radius: 14px; margin-bottom: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.05); }
         .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
 
+        .product-genre-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--secondary-text); margin-bottom: 4px; letter-spacing: 0.5px; }
         .product-name { font-size: 15px; font-weight: 600; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ffffff; }
         .product-price { font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #ffffff; }
 
@@ -71,6 +126,29 @@
 
         .btn-add-cart { background: var(--accent-gold); color: #000000; border: none; padding: 11px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: auto; transition: background 0.2s, transform 0.1s; text-transform: uppercase; letter-spacing: 0.2px; width: 100%; }
         .btn-reserve { background: #8a2be2; color: #ffffff; }
+
+        .empty-catalog-state {
+            grid-column: 1 / -1;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            max-width: 450px;
+            margin: 20px auto;
+        }
+        .empty-catalog-icon { font-size: 40px; }
+        .empty-catalog-title { font-size: 18px; font-weight: 700; color: #ffffff; }
+        .empty-catalog-text { font-size: 14px; color: var(--secondary-text); line-height: 1.5; }
+        .btn-contact-seller { background: #25D366; color: #ffffff; border: none; padding: 12px 24px; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2); transition: transform 0.2s; }
+        .btn-contact-seller:hover { transform: translateY(-2px); }
 
         .cart-floating-btn { position: fixed; bottom: calc(24px + env(safe-area-inset-bottom)); right: 24px; background: #ffffff; color: #1c1c1e; padding: 16px 22px; border-radius: 30px; font-weight: 700; box-shadow: 0 12px 35px rgba(0,0,0,0.6); z-index: 100; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
         .cart-badge { background: #1c1c1e; color: #ffffff; font-size: 12px; padding: 3px 9px; border-radius: 12px; font-weight: 700; }
@@ -130,6 +208,16 @@
         <h1>Fragancias 360</h1>
         <p>Catálogo de Perfumes e Inventario con Reservas</p>
     </header>
+
+    <div class="filters-container">
+        <input type="text" id="search-input" class="search-bar" placeholder="Buscar por nombre o fragancia...">
+        <div class="genre-filters" id="genre-filters">
+            <button class="genre-btn active" data-genre="Todos">Todos</button>
+            <button class="genre-btn" data-genre="Masculino">Masculino</button>
+            <button class="genre-btn" data-genre="Femenino">Femenino</button>
+            <button class="genre-btn" data-genre="Unisex">Unisex</button>
+        </div>
+    </div>
 
     <main class="catalog-container" id="catalog">
         <p style="text-align:center; width:100%; color: var(--secondary-text);">Cargando catálogo...</p>
@@ -215,19 +303,14 @@
             appId: "1:535105215340:web:47fcd308f64297b1c23149"
         };
 
-        const WHATSAPP_NUMERO = "59898324329"; 
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const perfumesRef = ref(db, "perfumes");
 
         let dbInventory = {}; 
         let cart = {};
-        
-        // Logs de depuración
-        console.log("✅ Firebase inicializado");
-        console.log("🔗 Database URL:", firebaseConfig.databaseURL);
-        console.log("📍 Escuchando en:", perfumesRef.path);        
+        let currentSearchQuery = "";
+        let currentGenreFilter = "Todos";
 
         const cartBtn = document.getElementById('cart-btn');
         const cartModal = document.getElementById('cart-modal');
@@ -240,6 +323,8 @@
         const cartBadgeCount = document.getElementById('cart-badge-count');
         const btnPay = document.getElementById('btn-pay');
         const detailBodyContent = document.getElementById('detail-body-content');
+        const searchInput = document.getElementById('search-input');
+        const genreFiltersContainer = document.getElementById('genre-filters');
 
         // ====== SISTEMA DE CARTELES PERSONALIZADOS ======
         const alertModal = document.getElementById('alert-modal');
@@ -332,64 +417,117 @@
         detailClose.addEventListener('click', closeAllModales);
         globalOverlay.addEventListener('click', closeAllModales);
 
-        onValue(perfumesRef, (snapshot) => {
-            console.log("📦 Datos recibidos de Firebase", snapshot.val());
-            const catalogContainer = document.getElementById('catalog');
-            catalogContainer.innerHTML = ''; 
+        searchInput.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value;
+            renderCatalog();
+        });
 
+        genreFiltersContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('genre-btn')) {
+                document.querySelectorAll('.genre-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentGenreFilter = e.target.getAttribute('data-genre');
+                renderCatalog();
+            }
+        });
+
+        onValue(perfumesRef, (snapshot) => {
             if (!snapshot.exists()) {
-                console.warn("⚠️ No hay datos en 'perfumes'");
-                catalogContainer.innerHTML = '<p style="text-align:center; width:100%; color: var(--secondary-text);">No hay perfumes disponibles actualmente. Verifica que los datos estén en Firebase.</p>';
                 dbInventory = {};
+                renderCatalog();
                 validateCartStock();
                 return;
             }
 
             dbInventory = snapshot.val();
-            console.log("✅ Perfumes cargados:", Object.keys(dbInventory).length);
+            renderCatalog();
+            validateCartStock();
             
-            Object.keys(dbInventory).forEach((id) => {
-                const perfume = dbInventory[id];
-                let stockHtml = '';
-                let buttonText = 'Agregar';
-                let buttonClass = 'btn-add-cart';
-                let cardClass = 'product-card';
+            if (detailModal.classList.contains('open') && window.amp_currentDetailId) {
+                window.amp_openDetail(window.amp_currentDetailId, true);
+            }
+        }, (error) => {
+            console.error("Error al conectar con Firebase:", error);
+            document.getElementById('catalog').innerHTML = `<p style="text-align:center; width:100%; color: #ff453a;">⚠️ Error de conexión: ${error.message}</p>`;
+        });
 
-                if (perfume.stock > 0) {
-                    stockHtml = `<div class="stock-badge stock-high">Stock: ${perfume.stock} disp.</div>`;
-                    buttonText = 'Agregar';
-                    buttonClass = 'btn-add-cart';
-                } else {
-                    stockHtml = `
-                        <div style="margin-bottom: 12px;">
-                            <div class="stock-badge stock-out" style="margin-bottom: 4px;">Agotado</div>
-                            <p style="font-size: 12px; color: #b163ff; font-weight: 600; font-style: italic;">¿Deseas reservar el tuyo?</p>
-                        </div>
-                    `;
-                    buttonText = 'Reservar';
-                    buttonClass = 'btn-add-cart btn-reserve';
-                    cardClass += ' out-of-stock-card';
-                }
+        function renderCatalog() {
+            const catalogContainer = document.getElementById('catalog');
+            catalogContainer.innerHTML = ''; 
 
-                const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
+            const keys = Object.keys(dbInventory);
 
-                const card = document.createElement('div');
-                card.className = cardClass;
-                card.innerHTML = `
-                    <div class="product-image-container" onclick="window.amp_openDetail('${id}')">
-                        <img src="${imagenSrc}" alt="${perfume.nombre}" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=Error+Enlace';">
+            if (keys.length === 0) {
+                catalogContainer.innerHTML = `
+                    <div class="empty-catalog-state">
+                        <div class="empty-catalog-icon">✨</div>
+                        <div class="empty-catalog-title">¡Catálogo en actualización!</div>
+                        <div class="empty-catalog-text">Actualmente no tenemos perfumes cargados en el sistema. Si buscas alguna fragancia en específico o deseas consultar stock, comunícate directamente con nosotros.</div>
+                        <a href="https://wa.me/59898324329?text=Hola,%20quisiera%20consultar%20por%20perfumes%20disponibles" target="_blank" class="btn-contact-seller">
+                            💬 Comunicarse por WhatsApp
+                        </a>
                     </div>
-                    <div onclick="window.amp_openDetail('${id}')">
-                        <h2 class="product-name">${perfume.nombre}</h2>
-                        <div class="product-price">$${perfume.precio}</div>
-                        ${stockHtml}
-                    </div>
-                    <button class="${buttonClass}" data-id="${id}">
-                        ${buttonText}
-                    </button>
                 `;
-                catalogContainer.appendChild(card);
+                return;
+            }
+
+            let totalMostrado = 0;
+
+            keys.forEach((id) => {
+                const perfume = dbInventory[id];
+                const matchesSearch = perfume.nombre.toLowerCase().includes(currentSearchQuery.toLowerCase());
+                const matchesGenre = currentGenreFilter === "Todos" || perfume.genero === currentGenreFilter;
+
+                if (matchesSearch && matchesGenre) {
+                    totalMostrado++;
+                    let stockHtml = '';
+                    let buttonText = 'Agregar';
+                    let buttonClass = 'btn-add-cart';
+                    let cardClass = 'product-card';
+
+                    if (perfume.stock > 0) {
+                        stockHtml = `<div class="stock-badge stock-high">Stock: ${perfume.stock} disp.</div>`;
+                        buttonText = 'Agregar';
+                        buttonClass = 'btn-add-cart';
+                    } else {
+                        stockHtml = `
+                            <div style="margin-bottom: 12px;">
+                                <div class="stock-badge stock-out" style="margin-bottom: 4px;">Agotado</div>
+                                <p style="font-size: 12px; color: #b163ff; font-weight: 600; font-style: italic;">¿Deseas reservar el tuyo?</p>
+                            </div>
+                        `;
+                        buttonText = 'Reservar';
+                        buttonClass = 'btn-add-cart btn-reserve';
+                        cardClass += ' out-of-stock-card';
+                    }
+
+                    const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
+                    const generoTexto = perfume.genero || "General";
+
+                    const card = document.createElement('div');
+                    card.className = cardClass;
+                    card.innerHTML = `
+                        <div class="product-image-container" onclick="window.amp_openDetail('${id}')">
+                            <img src="${imagenSrc}" alt="${perfume.nombre}" loading="lazy" onerror="this.onerror=null; this.src='https://via.placeholder.com/300?text=Error+Enlace';">
+                        </div>
+                        <div onclick="window.amp_openDetail('${id}')">
+                            <div class="product-genre-tag">${generoTexto}</div>
+                            <h2 class="product-name">${perfume.nombre}</h2>
+                            <div class="product-price">$${perfume.precio}</div>
+                            ${stockHtml}
+                        </div>
+                        <button class="${buttonClass}" data-id="${id}">
+                            ${buttonText}
+                        </button>
+                    `;
+                    catalogContainer.appendChild(card);
+                }
             });
+
+            if (totalMostrado === 0) {
+                catalogContainer.innerHTML = '<p style="text-align:center; width:100%; color: var(--secondary-text);">Ningún perfume coincide con la búsqueda o categoría seleccionada.</p>';
+                return;
+            }
 
             document.querySelectorAll('#catalog .btn-add-cart').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -397,17 +535,7 @@
                     addToCart(btn.getAttribute('data-id'));
                 });
             });
-
-            validateCartStock();
-            
-            if (detailModal.classList.contains('open') && window.amp_currentDetailId) {
-                window.amp_openDetail(window.amp_currentDetailId, true);
-            }
-        }, (error) => {
-            console.error("❌ Error al conectar con Firebase:", error);
-            const catalogContainer = document.getElementById('catalog');
-            catalogContainer.innerHTML = `<p style="text-align:center; width:100%; color: #ff453a;">⚠️ Error de conexión: ${error.message}</p>`;
-        });
+        }
 
         window.amp_currentDetailId = null;
         window.amp_openDetail = function(id, isRefresh = false) {
@@ -439,6 +567,7 @@
                         <img src="${imagenSrc}" alt="${perfume.nombre}">
                     </div>
                     <div>
+                        <div class="product-genre-tag">${perfume.genero || ''}</div>
                         <h3 class="detail-title">${perfume.nombre}</h3>
                         <div class="detail-price">$${perfume.precio}</div>
                         ${stockHtml}
@@ -567,7 +696,6 @@
             } else {
                 btnPay.disabled = false;
                 
-                // Agregar resumen de estado
                 const summary = document.createElement('div');
                 summary.style.cssText = 'padding: 16px; background: rgba(255,255,255,0.04); border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); margin-top: 8px; font-size: 12px; color: #a1a1a6;';
                 summary.innerHTML = `
@@ -586,7 +714,6 @@
         btnPay.addEventListener('click', async () => {
             if (Object.keys(cart).length === 0) return;
 
-            // --- PASO 1: SOLICITAR NOMBRE COMPLETO ---
             const nombreCliente = await showPrompt("👤 Nombre Completo", "Ej: Juan García");
             if (nombreCliente === null) return;
             
@@ -596,8 +723,7 @@
                 return;
             }
 
-            // PASO 2: Solicitar número de contacto
-            const telefonoCliente = await showPrompt("📱 Teléfono de Contacto", "Ej: 598-1234567");
+            const telefonoCliente = await showPrompt("📱 Teléfono de Contacto", "Ej: 099123456");
             const telefonoLimpio = telefonoCliente ? telefonoCliente.trim() : "No especificado";
 
             btnPay.disabled = true;
@@ -607,7 +733,6 @@
                 const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
                 const entregaTexto = deliveryOption === 'envio' ? "Envío a domicilio" : "Retirar gratis en dirección del vendedor";
 
-                // Construir array de items para Firebase
                 let items = [];
                 let totalPedido = 0;
                 let contieneReservas = false;
@@ -637,7 +762,6 @@
                     }
                 }
 
-                // Guardar la reserva/pedido completo en Firebase con estructura mejorada
                 const reservasRef = ref(db, "reservas");
                 const nuevaReservaRef = push(reservasRef);
                 await set(nuevaReservaRef, {
@@ -651,12 +775,10 @@
                     contieneReservas: contieneReservas
                 });
 
-                // Limpiar carrito y cerrar modales
                 cart = {};
                 renderCart();
                 closeAllModales();
 
-                // Mostrar mensaje de éxito
                 await showAlert(`¡Pedido registrado exitosamente!\n\n👤 ${nombreLimpio}\n💰 Total: $${totalPedido.toLocaleString()}\n📱 ${telefonoLimpio}\n\nEl administrador se pondrá en contacto pronto.`, "✅");
 
             } catch (error) {
