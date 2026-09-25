@@ -566,7 +566,7 @@
             const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
             const descripcionText = perfume.descripcion ? perfume.descripcion : 'Fragancia de alta calidad perteneciente a la línea premium internacional.';
             
-            // Extracción de las notass olfativas y stock con valores por defecto si no existen
+            // Extracción de las notas olfativas y stock con valores por defecto si no existen
             const stockDisp = perfume.stock !== undefined ? perfume.stock : 0;
             const notasSalida = perfume.notasSalida || perfume.notas_salida || 'No especificada';
             const notasscorazón = perfume.notasscorazón || perfume.notass_corazón || 'No especificadas';
@@ -603,7 +603,7 @@
                 <div class="detail-description-title">Pirámide Olfativa</div>
                 <div class="notes-grid">
                     <div class="note-item"><strong>notas de salida:</strong> ${notasSalida}</div>
-                    <div class="note-item"><strong>notass de corazón:</strong> ${notasscorazón}</div>
+                    <div class="note-item"><strong>notas de corazón:</strong> ${notasscorazón}</div>
                     <div class="note-item"><strong>notas de fondo:</strong> ${notasFondo}</div>
                 </div>
 
