@@ -192,7 +192,27 @@
         .detail-price { font-size: 22px; font-weight: 800; color: var(--accent-gold); margin-bottom: 6px; }
         
         .detail-description-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--secondary-text); margin-bottom: 6px; letter-spacing: 0.5px; }
-        .detail-description-text { font-size: 14px; line-height: 1.5; color: #e5e5ea; margin-bottom: 24px; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+        .detail-description-text { font-size: 14px; line-height: 1.5; color: #e5e5ea; margin-bottom: 16px; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .note-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #e5e5ea;
+        }
+        .note-item strong {
+            color: var(--accent-gold);
+            display: inline-block;
+            margin-right: 6px;
+        }
 
         .global-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 150; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
         .global-overlay.open { display: block; }
@@ -546,14 +566,20 @@
             const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
             const descripcionText = perfume.descripcion ? perfume.descripcion : 'Fragancia de alta calidad perteneciente a la línea premium internacional.';
             
+            // Extracción de las notas olfativas y stock con valores por defecto si no existen
+            const stockDisp = perfume.stock !== undefined ? perfume.stock : 0;
+            const notaSalida = perfume.notaSalida || perfume.nota_salida || 'No especificada';
+            const notasCorazon = perfume.notasCorazon || perfume.notas_corazon || 'No especificadas';
+            const notaFondo = perfume.notaFondo || perfume.nota_fondo || 'No especificada';
+
             let stockHtml = '', buttonText = 'Agregar al pedido', buttonClass = 'btn-add-cart';
-            if (perfume.stock > 0) { 
-                stockHtml = `<div class="stock-badge stock-high">Stock: ${perfume.stock} disp.</div>`; 
+            if (stockDisp > 0) { 
+                stockHtml = `<div class="stock-badge stock-high">Stock disponible: ${stockDisp}</div>`; 
                 buttonText = 'Agregar al pedido'; 
             } else { 
                 stockHtml = `
                     <div>
-                        <div class="stock-badge stock-out" style="margin-bottom: 2px;">Agotado</div>
+                        <div class="stock-badge stock-out" style="margin-bottom: 2px;">Agotado (Stock: 0)</div>
                         <p style="font-size: 13px; color: #b163ff; font-weight: 600; font-style: italic; margin-bottom: 8px;">¿Deseas reservar el tuyo?</p>
                     </div>
                 `; 
@@ -567,12 +593,20 @@
                         <img src="${imagenSrc}" alt="${perfume.nombre}">
                     </div>
                     <div>
-                        <div class="product-genre-tag">${perfume.genero || ''}</div>
+                        <div class="product-genre-tag">Género: ${perfume.genero || 'No especificado'}</div>
                         <h3 class="detail-title">${perfume.nombre}</h3>
-                        <div class="detail-price">$${perfume.precio}</div>
+                        <div class="detail-price">Precio: $${perfume.precio}</div>
                         ${stockHtml}
                     </div>
                 </div>
+
+                <div class="detail-description-title">Pirámide Olfativa</div>
+                <div class="notes-grid">
+                    <div class="note-item"><strong>Nota de salida:</strong> ${notaSalida}</div>
+                    <div class="note-item"><strong>Notas de corazón:</strong> ${notasCorazon}</div>
+                    <div class="note-item"><strong>Nota de fondo:</strong> ${notaFondo}</div>
+                </div>
+
                 <div class="detail-description-title">Descripción</div>
                 <div class="detail-description-text">${descripcionText}</div>
                 
@@ -779,7 +813,7 @@
                 renderCart();
                 closeAllModales();
 
-                await showAlert(`¡Pedido registrado exitosamente!\n\n👤 ${nombreLimpio}\n💰 Total: $${totalPedido.toLocaleString()}\n📱 ${telefonoLimpio}\n\nEl administrador se pondrá en contacto pronto.`, "✅");
+                await showAlert(`¡Pedido registrado exitosamente!\n\n👤 ${nombreLimmio || nombreLimpio}\n💰 Total: $${totalPedido.toLocaleString()}\n📱 ${telefonoLimpio}\n\nEl administrador se pondrá en contacto pronto.`, "✅");
 
             } catch (error) {
                 await showAlert("Hubo un error registrando el pedido. Por favor, intenta nuevamente.", "❌");
