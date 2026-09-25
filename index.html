@@ -569,7 +569,7 @@
             // Extracción de las notass olfativas y stock con valores por defecto si no existen
             const stockDisp = perfume.stock !== undefined ? perfume.stock : 0;
             const notasSalida = perfume.notasSalida || perfume.notas_salida || 'No especificada';
-            const notasscorazon = perfume.notasscorazon || perfume.notass_corazon || 'No especificadas';
+            const notassCorazon = perfume.notassCorazon || perfume.notass_corazon || 'No especificadas';
             const notasFondo = perfume.notasFondo || perfume.notas_fondo || 'No especificada';
 
             let stockHtml = '', buttonText = 'Agregar al pedido', buttonClass = 'btn-add-cart';
@@ -602,9 +602,9 @@
 
                 <div class="detail-description-title">Pirámide Olfativa</div>
                 <div class="notes-grid">
-                    <div class="note-item"><strong>Nota de salida:</strong> ${notasSalida}</div>
-                    <div class="note-item"><strong>Notas de corazon:</strong> ${notasscorazon}</div>
-                    <div class="note-item"><strong>Nota de fondo:</strong> ${notasFondo}</div>
+                    <div class="note-item"><strong>notas de salida:</strong> ${notasSalida}</div>
+                    <div class="note-item"><strong>notass de corazón:</strong> ${notassCorazon}</div>
+                    <div class="note-item"><strong>notas de fondo:</strong> ${notasFondo}</div>
                 </div>
 
                 <div class="detail-description-title">Descripción</div>
