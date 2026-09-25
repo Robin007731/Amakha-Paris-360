@@ -566,11 +566,11 @@
             const imagenSrc = perfume.fotoUrl ? perfume.fotoUrl : 'https://via.placeholder.com/300?text=Sin+Foto';
             const descripcionText = perfume.descripcion ? perfume.descripcion : 'Fragancia de alta calidad perteneciente a la línea premium internacional.';
             
-            // Extracción de las notas olfativas y stock con valores por defecto si no existen
+            // Extracción de las notass olfativas y stock con valores por defecto si no existen
             const stockDisp = perfume.stock !== undefined ? perfume.stock : 0;
-            const notaSalida = perfume.notaSalida || perfume.nota_salida || 'No especificada';
-            const notasCorazon = perfume.notasCorazon || perfume.notas_corazon || 'No especificadas';
-            const notaFondo = perfume.notaFondo || perfume.nota_fondo || 'No especificada';
+            const notasSalida = perfume.notasSalida || perfume.notas_salida || 'No especificada';
+            const notassCorazon = perfume.notassCorazon || perfume.notass_corazon || 'No especificadas';
+            const notasFondo = perfume.notasFondo || perfume.notas_fondo || 'No especificada';
 
             let stockHtml = '', buttonText = 'Agregar al pedido', buttonClass = 'btn-add-cart';
             if (stockDisp > 0) { 
@@ -602,9 +602,9 @@
 
                 <div class="detail-description-title">Pirámide Olfativa</div>
                 <div class="notes-grid">
-                    <div class="note-item"><strong>Nota de salida:</strong> ${notaSalida}</div>
-                    <div class="note-item"><strong>Notas de corazón:</strong> ${notasCorazon}</div>
-                    <div class="note-item"><strong>Nota de fondo:</strong> ${notaFondo}</div>
+                    <div class="note-item"><strong>Nota de salida:</strong> ${notasSalida}</div>
+                    <div class="note-item"><strong>Notas de corazón:</strong> ${notassCorazon}</div>
+                    <div class="note-item"><strong>Nota de fondo:</strong> ${notasFondo}</div>
                 </div>
 
                 <div class="detail-description-title">Descripción</div>
